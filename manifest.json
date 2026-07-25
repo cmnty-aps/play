@@ -11,13 +11,13 @@
   "categories": ["music", "entertainment", "utilities"],
   "icons": [
     {
-      "src": "/xymusic.vercel.app/logo.png",
+      "src": "/musically/logo.png",
       "sizes": "192x192",
       "type": "image/png",
       "purpose": "any"
     },
     {
-      "src": "/xymusic.vercel.app/logo.png",
+      "src": "/musically/logo.png",
       "sizes": "512x512",
       "type": "image/png",
       "purpose": "any maskable"

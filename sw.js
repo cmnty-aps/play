@@ -3,15 +3,15 @@ const STATIC_ASSETS = [
   '/',
   '/index.html',
   '/manifest.json',
-  '/xymusic.vercel.app/app.js',
-  '/xymusic.vercel.app/home.js',
-  '/xymusic.vercel.app/player.js',
-  '/xymusic.vercel.app/fullplayer.js',
-  '/xymusic.vercel.app/miniplayer.js',
-  '/xymusic.vercel.app/artist.js',
-  '/xymusic.vercel.app/favorites.js',
-  '/xymusic.vercel.app/search.js',
-  '/xymusic.vercel.app/logo.png'
+  '/musically/app.js',
+  '/musically/home.js',
+  '/musically/player.js',
+  '/musically/fullplayer.js',
+  '/musically/miniplayer.js',
+  '/musically/artist.js',
+  '/musically/favorites.js',
+  '/musically/search.js',
+  '/musically/logo.png'
 ];
 
 self.addEventListener('install', (event) => {

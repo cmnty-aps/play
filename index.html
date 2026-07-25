@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-title" content="Musically">
     <meta name="description" content="Aplikasi Pemutar Musik Digital & Streaming Studio">
     <link rel="manifest" href="/manifest.json">
-    <link rel="apple-touch-icon" href="/xymusic.vercel.app/logo.png">
+    <link rel="apple-touch-icon" href="/musically/logo.png">
     <title>Musically</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/lucide@latest"></script>
@@ -129,20 +129,26 @@
     <div id="splash-screen">
         <div class="splash-rings"><span></span><span></span><span></span><span></span>
             <div class="splash-disc"></div>
-            <div class="splash-logo-wrap shine-sweep"><img src="/xymusic.vercel.app/logo.png" alt="logo" onerror="this.style.display='none'" style="display: none;"></div>
+            <div class="splash-logo-wrap shine-sweep"><img src="/musically/logo.png" alt="logo" onerror="this.style.display='none'" style="display: none;"></div>
         </div>
         <div class="splash-title chrome-text">Musically</div>
         <div class="splash-sub">Studio Musik Digital & Pemutar Audio</div>
         <div class="splash-bar"><i></i></div>
     </div>
     <script>
-        setTimeout(function(){
+        function hideSplash() {
             var sp = document.getElementById('splash-screen');
-            if (sp) {
+            if (sp && !sp.classList.contains('hide')) {
                 sp.classList.add('hide');
                 setTimeout(function(){ if (sp && sp.parentNode) sp.parentNode.removeChild(sp); }, 650);
             }
-        }, 2000);
+        }
+        // Force hide after 3 seconds as a failsafe
+        setTimeout(hideSplash, 3000);
+        // Also try to hide when DOM is fully loaded
+        window.addEventListener('load', function() {
+            setTimeout(hideSplash, 1500);
+        });
     </script>
 
     <div class="flex-1 w-full max-w-3xl lg:max-w-4xl mx-auto overflow-y-auto pb-28 hide-scrollbar" id="main-area">
@@ -162,14 +168,14 @@
     </div>
     <audio id="bg-audio" loop preload="auto" style="display:none;" src="https://raw.githubusercontent.com/anars/blank-audio/master/1-second-of-silence.mp3"></audio>
 
-    <script src="/xymusic.vercel.app/player.js"></script>
-    <script src="/xymusic.vercel.app/home.js"></script>
-    <script src="/xymusic.vercel.app/search.js"></script>
-    <script src="/xymusic.vercel.app/miniplayer.js"></script>
-    <script src="/xymusic.vercel.app/fullplayer.js"></script>
-    <script src="/xymusic.vercel.app/artist.js"></script>
-    <script src="/xymusic.vercel.app/favorites.js"></script>
-    <script src="/xymusic.vercel.app/app.js"></script>
+    <script src="/musically/player.js"></script>
+    <script src="/musically/home.js"></script>
+    <script src="/musically/search.js"></script>
+    <script src="/musically/miniplayer.js"></script>
+    <script src="/musically/fullplayer.js"></script>
+    <script src="/musically/artist.js"></script>
+    <script src="/musically/favorites.js"></script>
+    <script src="/musically/app.js"></script>
 
     <!-- PWA Service Worker & Advanced Installation Handler -->
     <script>
