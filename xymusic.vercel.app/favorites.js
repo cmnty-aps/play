@@ -20,7 +20,7 @@ const Favorites = {
             <div class="flex-1 overflow-y-auto hide-scrollbar pb-28 max-w-3xl lg:max-w-4xl mx-auto w-full px-4" id="favorites-content">
             </div>
         </div>`;
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     open(){
@@ -51,7 +51,7 @@ const Favorites = {
                 <h3 class="font-extrabold text-white text-base mb-1">Belum ada lagu favorit</h3>
                 <p class="text-xs text-[#6b7280] leading-relaxed">Sukai lagu yang kamu dengarkan dengan menekan ikon hati untuk menyimpannya di sini.</p>
             </div>`;
-            lucide.createIcons();
+            safeCreateIcons();
             return;
         }
 
@@ -96,7 +96,7 @@ const Favorites = {
 
         html += `</div>`;
         content.innerHTML = html;
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     playSong(index){

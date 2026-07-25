@@ -1,10 +1,13 @@
 const App={
     init(){
-        gid('nav-container').innerHTML=``;
-        
-        MP.init();FullPlayer.init();Artist.init();Home.render();Search.render();
-        lucide.createIcons();
-        setTimeout(function(){ App.checkUrl(); }, 1000);
+        try {
+            gid('nav-container').innerHTML=``;
+            MP.init();FullPlayer.init();Artist.init();Home.render();Search.render();
+            safeCreateIcons();
+            setTimeout(function(){ App.checkUrl(); }, 1000);
+        } catch(e) {
+            console.error("App init failed, continuing failsafe:", e);
+        }
     },
     checkUrl(){
         var p=new URLSearchParams(location.search);
@@ -39,7 +42,7 @@ const App={
         document.body.appendChild(popup);
         popup.querySelector('#popup-play').onclick=function(){popup.remove();S.ct={id:videoId,videoId:videoId,title:title,artist:artist,cover:cover,artistId:'',ytUrl:'https://youtube.com/watch?v='+videoId};S.ps='direct';S.pl=[S.ct];S.pi=0;UU();MP.show();setTimeout(function(){FullPlayer.open();loadAndPlayVideo(videoId);},200);};
         popup.querySelector('#popup-later').onclick=function(){popup.remove();};
-        lucide.createIcons();
+        safeCreateIcons();
     },
     switch(t){
         S.at=t;
@@ -77,7 +80,7 @@ const App={
         }
 
         gid('main-area').scrollTop=0;
-        lucide.createIcons();
+        safeCreateIcons();
     }
 };
 App.init();Home.fetch();
@@ -97,7 +100,7 @@ const Library={
         html+='<div class="px-4"><button onclick="Library.createNew()" class="w-full btn-chrome font-bold py-3.5 rounded-xl active:scale-95 mb-4 text-sm shadow-md flex items-center justify-center gap-2"><i data-lucide="plus" class="w-4 h-4"></i>Buat Playlist Baru</button>';
         if(pls.length===0){html+='<div class="text-center text-[#6b7280] mt-10 p-6 glass rounded-2xl"><i data-lucide="library" class="w-12 h-12 mx-auto mb-3 opacity-40"></i><p class="text-sm font-medium">Belum ada playlist</p></div>';}
         else{html+='<div class="grid grid-cols-2 sm:grid-cols-3 gap-3.5">';pls.forEach(function(p){html+='<div onclick="Library.open(\''+p.id+'\')" class="glass glass-hover rounded-2xl p-3 cursor-pointer active:scale-95 transition flex flex-col"><img src="'+(p.image||FI)+'" class="w-full aspect-square object-cover rounded-xl mb-2.5 shadow-md" onerror="this.src=\''+FI+'\'" /><h3 class="font-bold text-sm text-white truncate w-full">'+es(p.name)+'</h3><p class="text-[#6b7280] text-xs mt-0.5 truncate">'+p.songs.length+' lagu</p></div>';});html+='</div>';}
-        html+='</div>';gid('view-library').innerHTML=html;lucide.createIcons();
+        html+='</div>';gid('view-library').innerHTML=html;safeCreateIcons();
     },
     createNew(){
         var popup=document.createElement('div');popup.className='fixed inset-0 z-[300] flex items-end justify-center bg-black/70 backdrop-blur-sm p-2 sm:p-4';
@@ -115,7 +118,7 @@ const Library={
         var html='<div class="pt-6 px-4 mb-3 flex items-center gap-3"><button onclick="Library.render();App.switch(\'library\')" class="btn-back" title="Kembali ke Library"><i data-lucide="arrow-left" class="w-5 h-5"></i></button><div class="min-w-0 flex-1"><h1 class="text-xl font-bold text-white truncate">'+es(pl.name)+'</h1><p class="text-[#6b7280] text-xs truncate">'+pl.songs.length+' lagu</p></div></div>';
         if(pl.songs.length===0){html+='<div class="text-center text-[#6b7280] mt-10 p-6 glass rounded-2xl mx-4"><p class="text-sm">Belum ada lagu di playlist ini</p></div>';}
         else{html+='<div class="space-y-1.5 px-4">';pl.songs.forEach(function(s,i){html+='<div onclick="Library.playSong(\''+id+'\','+i+')" class="flex items-center gap-3 p-3 hover:bg-white/5 rounded-xl cursor-pointer active:scale-[0.98] transition"><img src="'+s.cover+'" class="w-12 h-12 rounded-lg object-cover shrink-0 shadow-md" onerror="this.src=\''+FI+'\'" /><div class="flex-1 min-w-0"><p class="font-medium text-sm text-white truncate">'+es(s.title)+'</p><p class="text-[#6b7280] text-xs truncate mt-0.5">'+es(s.artist)+'</p></div></div>';});html+='</div>';}
-        html+='</div>';gid('view-library').innerHTML=html;lucide.createIcons();
+        html+='</div>';gid('view-library').innerHTML=html;safeCreateIcons();
     },
     playSong(plId,index){var pls=getUserPlaylists();var pl=pls.find(function(p){return p.id===plId;});if(!pl||!pl.songs[index])return;S.pl=pl.songs;S.pi=index;S.ps='playlist';S.ct=S.pl[S.pi];UU();MP.show();loadAndPlayVideo(S.ct.videoId);}
 };

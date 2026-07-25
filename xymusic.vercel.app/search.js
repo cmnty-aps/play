@@ -22,7 +22,7 @@ const Search={
         <div id="search-history-container" class="px-4 mt-6"></div>
         <div id="filter-tabs" class="hidden flex gap-2 px-4 pb-3 mt-3 overflow-x-auto hide-scrollbar"><button onclick="setFilter('all')" id="f-all" class="filter-tab active px-4 py-2 rounded-full text-xs font-bold bg-white text-black shrink-0">Semua</button><button onclick="setFilter('songs')" id="f-songs" class="filter-tab glass px-4 py-2 rounded-full text-xs font-medium text-white shrink-0">Lagu</button><button onclick="setFilter('artists')" id="f-artists" class="filter-tab glass px-4 py-2 rounded-full text-xs font-medium text-white shrink-0">Artis</button></div>
         <div class="px-4 mt-2 max-w-full overflow-hidden" id="search-results"></div>`;
-        lucide.createIcons();Search.events();Search.renderHistory();
+        safeCreateIcons();Search.events();Search.renderHistory();
     },
     renderHistory(){
         var h=[]; try{ h=JSON.parse(localStorage.getItem('search_history')||'[]'); }catch(e){h=[];}
@@ -30,7 +30,7 @@ const Search={
         if(S.sq || h.length===0){c.classList.add('hidden');return;}
         c.classList.remove('hidden');
         c.innerHTML='<div class="flex items-center justify-between mb-3"><h2 class="text-xs font-bold text-neutral-400 uppercase tracking-widest">Pencarian Terakhir</h2><button onclick="Search.clearHistory()" class="text-xs text-neutral-500 hover:text-white transition">Hapus</button></div><div class="flex flex-wrap gap-2 max-w-full">'+h.map(function(q){return'<button onclick="selectSuggestion(\''+es(q).replace(/'/g,"\\'")+'\')" class="glass hover:bg-white/10 px-3.5 py-2 rounded-full text-xs flex items-center gap-2 max-w-full min-w-0 transition active:scale-95"><i data-lucide="history" class="w-3.5 h-3.5 text-[#6b7280] shrink-0"></i><span class="truncate">'+es(q)+'</span></button>';}).join('')+'</div>';
-        lucide.createIcons();
+        safeCreateIcons();
     },
     saveHistory(q){
         var h=[]; try{ h=JSON.parse(localStorage.getItem('search_history')||'[]'); }catch(e){h=[];}

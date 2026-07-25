@@ -56,7 +56,7 @@ const FullPlayer={
             </div>
             <div class="flex-1 overflow-y-auto px-6 py-6 hide-scrollbar max-w-xl mx-auto w-full"><div id="lyrics-loading" class="flex justify-center items-center h-full"><div class="w-8 h-8 border-3 border-[#cfd3d8] border-t-transparent rounded-full animate-spin"></div></div><div id="lyrics-content" class="hidden pb-32"></div><div id="lyrics-empty" class="hidden flex justify-center items-center h-full text-[#6b7280]"><div><i data-lucide="music" class="w-16 h-16 mx-auto mb-4 opacity-30"></i><p class="text-sm">Lirik tidak tersedia</p></div></div></div>
         </div>`;
-        lucide.createIcons();
+        safeCreateIcons();
     },
     open(){var fp=gid('full-player');fp.style.display='flex';document.body.style.overflow='hidden';document.body.style.position='fixed';document.body.style.width='100%';requestAnimationFrame(function(){fp.style.transform='translateY(0)';});MP.hide();},
     close(){var fp=gid('full-player');fp.style.transform='translateY(100%)';document.body.style.overflow='';document.body.style.position='';document.body.style.width='';setTimeout(function(){fp.style.display='none';MP.show();},350);},

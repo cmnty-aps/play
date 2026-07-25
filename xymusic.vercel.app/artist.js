@@ -14,7 +14,7 @@ const Artist={
                 <p class="text-center text-[#6b7280] mt-10">Memuat profil artis...</p>
             </div>
         </div>`;
-        lucide.createIcons();
+        safeCreateIcons();
     },
     open(id,name){
         gid('artist-modal').style.display='flex';
@@ -96,7 +96,7 @@ const Artist={
                 }
                 
                 gid('artist-content').innerHTML=html;
-                lucide.createIcons();
+                safeCreateIcons();
             } else {
                 gid('artist-content').innerHTML='<p class="text-center text-neutral-400 mt-10">Data profil artis tidak ditemukan.</p>';
             }

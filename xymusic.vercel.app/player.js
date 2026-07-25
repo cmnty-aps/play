@@ -8,6 +8,15 @@ function fm(s){if(isNaN(s))return"0:00";const m=Math.floor(s/60),se=Math.floor(s
 function es(t){if(!t)return'';const d=document.createElement('div');d.textContent=t;return d.innerHTML;}
 function cn(t){if(!t)return'Unknown';return t.replace(/[^\x20-\x7E\xA0-\xFF\u0100-\uFFFF]/g,'').replace(/\s*-\s*Topic$/i,'').trim()||'Unknown';}
 function gid(id){return document.getElementById(id);}
+function safeCreateIcons(){
+    try {
+        if(typeof lucide !== 'undefined' && typeof lucide.createIcons === 'function') {
+            lucide.createIcons();
+        }
+    } catch(e) {
+        console.warn("Lucide failed to load icons:", e);
+    }
+}
 
 document.addEventListener('visibilitychange', function() {
     if (document.hidden && S.ip) {
@@ -170,7 +179,7 @@ function UB(){
         fu.innerHTML='<i data-lucide="play" class="w-7 h-7 fill-current ml-0.5"></i>';
         if(bg) bg.pause();
     }
-    lucide.createIcons();
+    safeCreateIcons();
     if('mediaSession' in navigator){navigator.mediaSession.playbackState=S.ip?'playing':'paused';}
 }
 
@@ -338,7 +347,7 @@ function UF(){
     var b=gid('btn-fav');if(!b||!S.ct)return;
     var isF=S.favorites.some(function(f){return f.videoId===S.ct.videoId;});
     b.innerHTML=isF?'<i data-lucide="heart" class="w-4 h-4 fill-rose-500 text-rose-500"></i>':'<i data-lucide="heart" class="w-4 h-4"></i>';
-    lucide.createIcons();
+    safeCreateIcons();
 }
 
 // SLEEP TIMER
@@ -357,7 +366,7 @@ function toggleSleepTimer(){
         return'<button onclick="setSleepTimer(\''+o.v+'\');this.parentElement.parentElement.remove();" class="w-full text-left p-4 hover:bg-white/5 flex items-center justify-between border-b border-white/5"><span class="text-white font-medium">'+o.t+'</span>'+(S.st===o.v?'<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>':'')+'</button>';
     }).join('');
     popup.innerHTML='<div class="glass-strong w-full max-w-md rounded-t-3xl p-6 border-t border-white/10" style="animation:slideUp 0.3s ease-out forwards;"><div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4"></div><h3 class="font-bold text-white mb-3 flex items-center"><i data-lucide="clock" class="w-5 h-5 mr-2"></i>Sleep Timer</h3><div class="max-h-72 overflow-y-auto hide-scrollbar">'+html+'</div><button onclick="this.parentElement.parentElement.remove()" class="w-full mt-3 py-3 glass glass-hover text-white rounded-full">Batal</button></div>';
-    document.body.appendChild(popup);lucide.createIcons();
+    document.body.appendChild(popup);safeCreateIcons();
 }
 function setSleepTimer(v){
     if(S.st_timeout){clearTimeout(S.st_timeout);S.st_timeout=null;}
@@ -380,7 +389,7 @@ function togglePlaybackSpeed(){
         return'<button onclick="setPlaybackSpeed('+o+');this.parentElement.parentElement.remove();" class="w-full text-left p-4 hover:bg-white/5 flex items-center justify-between border-b border-white/5"><span class="text-white font-medium">'+o+'x</span>'+(S.speed===o?'<i data-lucide="check" class="w-4 h-4 text-emerald-400"></i>':'')+'</button>';
     }).join('');
     popup.innerHTML='<div class="glass-strong w-full max-w-md rounded-t-3xl p-6 border-t border-white/10" style="animation:slideUp 0.3s ease-out forwards;"><div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4"></div><h3 class="font-bold text-white mb-3 flex items-center"><i data-lucide="gauge" class="w-5 h-5 mr-2"></i>Playback Speed</h3><div class="max-h-72 overflow-y-auto hide-scrollbar">'+html+'</div><button onclick="this.parentElement.parentElement.remove()" class="w-full mt-3 py-3 glass glass-hover text-white rounded-full">Batal</button></div>';
-    document.body.appendChild(popup);lucide.createIcons();
+    document.body.appendChild(popup);safeCreateIcons();
 }
 function setPlaybackSpeed(v){
     S.speed=v;
@@ -406,7 +415,7 @@ function showToast(msg){
     toast.innerHTML = '<div class="w-8 h-8 rounded-xl btn-chrome flex items-center justify-center shrink-0 shadow-md"><i data-lucide="music-2" class="w-4 h-4 text-black"></i></div><div class="flex-1 min-w-0"><p class="text-xs font-bold text-white truncate">'+es(msg)+'</p><p class="text-[10px] text-neutral-400 truncate">Notifikasi Musically</p></div><button onclick="this.closest(\'#top-toast-popup\').remove()" class="text-neutral-400 hover:text-white p-1"><i data-lucide="x" class="w-4 h-4"></i></button>';
 
     document.body.appendChild(toast);
-    lucide.createIcons();
+    safeCreateIcons();
 
     setTimeout(function(){
         if(toast && toast.parentNode){
@@ -416,4 +425,4 @@ function showToast(msg){
     }, 2600);
 }
 function addCurrentToPlaylist(){if(!S.ct)return;var pls=getUserPlaylists();if(pls.length===0){showToast('Belum ada playlist');return;}showPlaylistPicker(S.ct);}
-function showPlaylistPicker(track){var pls=getUserPlaylists();var popup=document.createElement('div');popup.className='fixed inset-0 z-[300] flex items-end justify-center bg-black/60';popup.onclick=function(e){if(e.target===popup)popup.remove();};var listHtml=pls.map(function(p){return'<button onclick="addToPlaylistById(\''+p.id+'\',S.ct);this.parentElement.parentElement.remove();" class="w-full text-left p-4 hover:bg-white/5 flex items-center gap-3 border-b border-white/5"><img src="'+(p.image||FI)+'" class="w-10 h-10 rounded object-cover" /><div><p class="font-medium text-white">'+p.name+'</p><p class="text-[#6b7280] text-xs">'+p.songs.length+' lagu</p></div></button>';}).join('');popup.innerHTML='<div class="glass-strong w-full max-w-md rounded-t-3xl p-6 border-t border-white/10" style="animation:slideUp 0.3s ease-out forwards;"><div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4"></div><h3 class="font-bold text-white mb-3 flex items-center"><i data-lucide="list-plus" class="w-5 h-5 mr-2"></i>Tambah ke Playlist</h3><div class="max-h-72 overflow-y-auto hide-scrollbar">'+listHtml+'</div><button onclick="this.parentElement.parentElement.remove()" class="w-full mt-3 py-3 glass glass-hover text-white rounded-full flex items-center justify-center"><i data-lucide="x" class="w-4 h-4 mr-2"></i>Batal</button></div>';document.body.appendChild(popup);lucide.createIcons();}
+function showPlaylistPicker(track){var pls=getUserPlaylists();var popup=document.createElement('div');popup.className='fixed inset-0 z-[300] flex items-end justify-center bg-black/60';popup.onclick=function(e){if(e.target===popup)popup.remove();};var listHtml=pls.map(function(p){return'<button onclick="addToPlaylistById(\''+p.id+'\',S.ct);this.parentElement.parentElement.remove();" class="w-full text-left p-4 hover:bg-white/5 flex items-center gap-3 border-b border-white/5"><img src="'+(p.image||FI)+'" class="w-10 h-10 rounded object-cover" /><div><p class="font-medium text-white">'+p.name+'</p><p class="text-[#6b7280] text-xs">'+p.songs.length+' lagu</p></div></button>';}).join('');popup.innerHTML='<div class="glass-strong w-full max-w-md rounded-t-3xl p-6 border-t border-white/10" style="animation:slideUp 0.3s ease-out forwards;"><div class="w-10 h-1 bg-white/20 rounded-full mx-auto mb-4"></div><h3 class="font-bold text-white mb-3 flex items-center"><i data-lucide="list-plus" class="w-5 h-5 mr-2"></i>Tambah ke Playlist</h3><div class="max-h-72 overflow-y-auto hide-scrollbar">'+listHtml+'</div><button onclick="this.parentElement.parentElement.remove()" class="w-full mt-3 py-3 glass glass-hover text-white rounded-full flex items-center justify-center"><i data-lucide="x" class="w-4 h-4 mr-2"></i>Batal</button></div>';document.body.appendChild(popup);safeCreateIcons();}

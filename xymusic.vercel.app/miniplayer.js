@@ -24,7 +24,7 @@ const MP={
                 <i data-lucide="music" class="w-5 h-5"></i>
             </button>
         </div>`;
-        lucide.createIcons();
+        safeCreateIcons();
     },
     show(){
         var mp=gid('mini-player');

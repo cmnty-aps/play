@@ -81,7 +81,7 @@ const Home={
                 <div id="home-song-list" class="space-y-1"></div>
             </div>
         </div>`;
-        lucide.createIcons();
+        safeCreateIcons();
         Home.renderFeaturedBanners();
     },
 
@@ -164,7 +164,7 @@ const Home={
             <button onclick="this.closest('.fixed').remove()" class="w-full mt-5 py-3 glass text-white rounded-full font-bold">Tutup</button>
         </div>`;
         document.body.appendChild(popup);
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     startVoiceSearch(){
@@ -227,20 +227,40 @@ const Home={
             `;
         }).join('');
 
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     async fetch(){
         Home.show(); // Render initial skeleton state immediately
+        
+        // Robust client-side fallback list containing the 8 default Indonesian songs
+        const fallbackSongs = [
+            { id: "RO75uUZiAw0", videoId: "RO75uUZiAw0", title: "Teh Hijau", artist: "Tulus", cover: "https://i.ytimg.com/vi/RO75uUZiAw0/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/RO75uUZiAw0/hq720.jpg", ytUrl: "https://youtube.com/watch?v=RO75uUZiAw0", duration: "3:31" },
+            { id: "jStNaVCW838", videoId: "jStNaVCW838", title: "Sempurna", artist: "Andra and The Backbone", cover: "https://i.ytimg.com/vi/jStNaVCW838/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/jStNaVCW838/hq720.jpg", ytUrl: "https://youtube.com/watch?v=jStNaVCW838", duration: "4:26" },
+            { id: "t9VWICGOD90", videoId: "t9VWICGOD90", title: "Jiwa Yang Bersedia", artist: "Andra and The Backbone", cover: "https://i.ytimg.com/vi/t9VWICGOD90/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/t9VWICGOD90/hq720.jpg", ytUrl: "https://youtube.com/watch?v=t9VWICGOD90", duration: "5:41" },
+            { id: "FocFked1TbQ", videoId: "FocFked1TbQ", title: "Surat Cinta Untuk Starla", artist: "Virgoun", cover: "https://i.ytimg.com/vi/FocFked1TbQ/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/FocFked1TbQ/hq720.jpg", ytUrl: "https://youtube.com/watch?v=FocFked1TbQ", duration: "4:34" },
+            { id: "-mwsPoerFWU", videoId: "-mwsPoerFWU", title: "Monolog", artist: "Pamungkas", cover: "https://i.ytimg.com/vi/-mwsPoerFWU/hqdefault.jpg", thumbnail: "https://i.ytimg.com/vi/-mwsPoerFWU/hqdefault.jpg", ytUrl: "https://youtube.com/watch?v=-mwsPoerFWU", duration: "3:21" },
+            { id: "yIPX-FNJ9qk", videoId: "yIPX-FNJ9qk", title: "Sedia Aku Sebelum Hujan", artist: "Idgitaf", cover: "https://i.ytimg.com/vi/yIPX-FNJ9qk/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/yIPX-FNJ9qk/hq720.jpg", ytUrl: "https://youtube.com/watch?v=yIPX-FNJ9qk", duration: "3:54" },
+            { id: "l2mI4vL95kU", videoId: "l2mI4vL95kU", title: "Sesuatu Di Jogja", artist: "Adhitia Sofyan", cover: "https://i.ytimg.com/vi/l2mI4vL95kU/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/l2mI4vL95kU/hq720.jpg", ytUrl: "https://youtube.com/watch?v=l2mI4vL95kU", duration: "4:48" },
+            { id: "tOMFR0nQt48", videoId: "tOMFR0nQt48", title: "Resah", artist: "Last Child", cover: "https://i.ytimg.com/vi/tOMFR0nQt48/hq720.jpg", thumbnail: "https://i.ytimg.com/vi/tOMFR0nQt48/hq720.jpg", ytUrl: "https://youtube.com/watch?v=tOMFR0nQt48", duration: "4:34" }
+        ];
+
         try{
             var r=await fetch('/api/home');
             var d=await r.json();
-            if(d.status){
-                S.rec=d.result.recommendations || [];
-                S.trend=d.result.trending || [];
+            if(d.status && d.result && d.result.recommendations && d.result.recommendations.length > 0){
+                S.rec=d.result.recommendations;
+                S.trend=d.result.trending || d.result.recommendations;
                 Home.show();
+            } else {
+                throw new Error("Invalid response format");
             }
-        }catch(e){}
+        }catch(e){
+            console.warn("API Error, using client fallback:", e);
+            S.rec=fallbackSongs;
+            S.trend=fallbackSongs.slice(0, 4);
+            Home.show();
+        }
     },
 
     show(){
@@ -425,7 +445,7 @@ const Home={
             }).join('');
         }
 
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     filterByArtist(artistName){
@@ -469,7 +489,7 @@ const Home={
             <button onclick="this.closest('.fixed').remove()" class="w-full mt-4 py-3 glass text-white rounded-full font-bold">Batal</button>
         </div>`;
         document.body.appendChild(popup);
-        lucide.createIcons();
+        safeCreateIcons();
     },
 
     toggleFavSong(videoId){

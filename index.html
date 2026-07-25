@@ -135,6 +135,15 @@
         <div class="splash-sub">Studio Musik Digital & Pemutar Audio</div>
         <div class="splash-bar"><i></i></div>
     </div>
+    <script>
+        setTimeout(function(){
+            var sp = document.getElementById('splash-screen');
+            if (sp) {
+                sp.classList.add('hide');
+                setTimeout(function(){ if (sp && sp.parentNode) sp.parentNode.removeChild(sp); }, 650);
+            }
+        }, 2000);
+    </script>
 
     <div class="flex-1 w-full max-w-3xl lg:max-w-4xl mx-auto overflow-y-auto pb-28 hide-scrollbar" id="main-area">
         <div id="view-home"></div>
