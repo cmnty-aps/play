@@ -1,0 +1,222 @@
+<!DOCTYPE html><html lang="id"><head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="theme-color" content="#050507">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Musically">
+    <meta name="description" content="Aplikasi Pemutar Musik Digital & Streaming Studio">
+    <link rel="manifest" href="/manifest.json">
+    <link rel="apple-touch-icon" href="/xymusic.vercel.app/logo.png">
+    <title>Musically</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        * { -webkit-tap-highlight-color: transparent; }
+        html, body { background: #050507; }
+        .hide-scrollbar::-webkit-scrollbar { display: none; }
+        .hide-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+        .pb-safe { padding-bottom: env(safe-area-inset-bottom, 20px); }
+        .fill-current { fill: currentColor; }
+        .filter-tab.active { background: rgba(255,255,255,0.92) !important; color: black !important; box-shadow: 0 4px 20px rgba(255,255,255,0.15); }
+
+        /* ===== Black Glass design system (monochrome, no green) ===== */
+        .app-bg{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none;background:#050507;}
+        .app-bg span{position:absolute;border-radius:50%;filter:blur(80px);animation:orbBreathe 8s ease-in-out infinite;}
+        .app-bg span:nth-child(1){width:280px;height:280px;background:rgba(255,255,255,0.10);top:-70px;left:-60px;}
+        .app-bg span:nth-child(2){width:320px;height:320px;background:rgba(150,156,168,0.18);bottom:40px;right:-90px;animation-delay:2s;}
+        .app-bg span:nth-child(3){width:240px;height:240px;background:rgba(255,255,255,0.05);top:45%;left:35%;animation-delay:4s;}
+        @keyframes orbBreathe{0%,100%{opacity:.6;transform:scale(1);}50%{opacity:1;transform:scale(1.15);}}
+
+        .glass{background:rgba(255,255,255,0.045);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);border:1px solid rgba(255,255,255,0.08);}
+        .glass-hover{transition:background .2s ease, border-color .2s ease;}
+        .glass-hover:hover{background:rgba(255,255,255,0.09);border-color:rgba(255,255,255,0.14);}
+        .glass-strong{background:rgba(8,8,11,0.72);backdrop-filter:blur(28px);-webkit-backdrop-filter:blur(28px);border:1px solid rgba(255,255,255,0.09);}
+        .glass-input{background:rgba(255,255,255,0.05);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);border:1px solid rgba(255,255,255,0.1);}
+        .glass-input:focus-within, .glass-input:focus{border-color:rgba(210,213,218,0.45);}
+        .glass-pane{background:rgba(6,6,8,0.55);backdrop-filter:blur(34px);-webkit-backdrop-filter:blur(34px);}
+        .glass-edge{border:1px solid rgba(255,255,255,0.08);}
+
+        /* Chrome / glossy gray accent — replaces all green accents */
+        .chrome-text{background:linear-gradient(110deg,#8b9099 0%,#f4f5f6 30%,#ffffff 45%,#aab0b8 65%,#8b9099 100%);background-size:250% auto;-webkit-background-clip:text;background-clip:text;color:transparent;animation:chromeSheen 5s linear infinite;}
+        @keyframes chromeSheen{0%{background-position:0% 50%;}100%{background-position:200% 50%;}}
+
+        .skeleton-shimmer {
+            background: linear-gradient(90deg, rgba(255, 255, 255, 0.04) 25%, rgba(255, 255, 255, 0.16) 50%, rgba(255, 255, 255, 0.04) 75%);
+            background-size: 200% 100%;
+            animation: skeletonShimmer 1.5s ease-in-out infinite;
+        }
+        @keyframes skeletonShimmer {
+            0% { background-position: 200% 0; }
+            100% { background-position: -200% 0; }
+        }
+
+        @keyframes slideDownTop {
+            0% { transform: translate(-50%, -120%); opacity: 0; scale: 0.95; }
+            100% { transform: translate(-50%, 0); opacity: 1; scale: 1; }
+        }
+        @keyframes slideUpTop {
+            0% { transform: translate(-50%, 0); opacity: 1; scale: 1; }
+            100% { transform: translate(-50%, -120%); opacity: 0; scale: 0.95; }
+        }
+
+        .btn-chrome{position:relative;overflow:hidden;background:linear-gradient(135deg,#f2f3f4,#aab0b8);color:#0a0a0c;box-shadow:0 8px 22px rgba(0,0,0,0.45), inset 0 1px 0 rgba(255,255,255,0.6);}
+        .btn-chrome:hover{background:linear-gradient(135deg,#ffffff,#bcc1c7);}
+        .btn-chrome::after{content:'';position:absolute;top:0;left:-160%;width:55%;height:100%;background:linear-gradient(120deg,transparent,rgba(255,255,255,0.65),transparent);transform:skewX(-20deg);animation:chromeSweep 3.2s ease-in-out infinite;}
+        @keyframes chromeSweep{0%{left:-160%;}55%{left:160%;}100%{left:160%;}}
+
+        .shine-sweep{position:relative;}
+        .shine-sweep::after{content:'';position:absolute;inset:0;border-radius:inherit;background:linear-gradient(115deg,transparent 35%,rgba(255,255,255,0.28) 48%,transparent 62%);background-size:250% 250%;animation:sheenMove 4.5s ease-in-out infinite;pointer-events:none;}
+        @keyframes sheenMove{0%{background-position:220% 0%;}100%{background-position:-60% 0%;}}
+
+        .nav-blur { background: rgba(6,6,9,0.55); backdrop-filter: blur(32px); -webkit-backdrop-filter: blur(32px); border-top: 1px solid rgba(255,255,255,0.08); }
+        .artist-photo { width:120px; height:120px; border-radius:50%; object-fit:cover; border:3px solid rgba(255,255,255,0.85); box-shadow:0 10px 40px rgba(0,0,0,0.6); background:rgba(255,255,255,0.08); }
+        @keyframes slideUp{from{transform:translateY(100%);opacity:0}to{transform:translateY(0);opacity:1}}
+        .animate-slide-up{animation:slideUp 0.3s ease-out forwards}
+
+        /* ===== Back Button styling ===== */
+        .btn-back {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 9999px;
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #ffffff;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .btn-back:hover {
+            background: rgba(255, 255, 255, 0.18);
+            border-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.06);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.4);
+        }
+        .btn-back:active {
+            transform: scale(0.92);
+        }
+
+        /* ===== Splash Screen: glassy vinyl/cassette with rippling waves ===== */
+        #splash-screen{position:fixed;inset:0;z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;background:radial-gradient(circle at 50% 45%, #0d0d10 0%, #050507 70%);transition:opacity .6s ease, visibility .6s ease;}
+        #splash-screen.hide{opacity:0;visibility:hidden;pointer-events:none;}
+        .splash-rings{position:relative;width:240px;height:240px;display:flex;align-items:center;justify-content:center;}
+        .splash-rings span{position:absolute;width:100%;height:100%;border-radius:50%;border:1px solid rgba(220,224,228,0.4);animation:splashWave 2.8s cubic-bezier(.4,0,.2,1) infinite;}
+        .splash-rings span:nth-child(2){animation-delay:.7s;}
+        .splash-rings span:nth-child(3){animation-delay:1.4s;}
+        .splash-rings span:nth-child(4){animation-delay:2.1s;}
+        @keyframes splashWave{0%{transform:scale(.28);opacity:0;}15%{opacity:.7;}100%{transform:scale(1.5);opacity:0;}}
+        .splash-disc{position:absolute;width:128px;height:128px;border-radius:50%;background:repeating-radial-gradient(circle, rgba(255,255,255,0.07) 0px, rgba(255,255,255,0.07) 1px, transparent 2px, transparent 7px);box-shadow:0 0 50px rgba(255,255,255,0.1), inset 0 0 30px rgba(0,0,0,0.6);animation:splashSpin 7s linear infinite;}
+        .splash-logo-wrap{position:relative;width:104px;height:104px;border-radius:50%;background:rgba(255,255,255,0.06);backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:1px solid rgba(255,255,255,0.16);display:flex;align-items:center;justify-content:center;overflow:hidden;animation:splashPulse 2.4s ease-in-out infinite;}
+        .splash-logo-wrap img{width:68%;height:68%;object-fit:contain;filter:drop-shadow(0 4px 14px rgba(0,0,0,0.6));}
+        @keyframes splashPulse{0%,100%{box-shadow:0 0 30px rgba(255,255,255,0.08), inset 0 1px 0 rgba(255,255,255,0.15);}50%{box-shadow:0 0 60px rgba(255,255,255,0.22), inset 0 1px 0 rgba(255,255,255,0.3);}}
+        @keyframes splashSpin{from{transform:rotate(0deg);}to{transform:rotate(360deg);}}
+        .splash-title{margin-top:26px;font-weight:900;font-size:1.05rem;letter-spacing:.06em;}
+        .splash-sub{margin-top:6px;font-size:.7rem;color:#7c828c;letter-spacing:.1em;text-transform:uppercase;opacity:.8;}
+        .splash-bar{margin-top:22px;width:120px;height:2px;border-radius:2px;background:rgba(255,255,255,0.1);overflow:hidden;}
+        .splash-bar i{display:block;height:100%;width:40%;background:linear-gradient(90deg,transparent,#e8eaed,transparent);animation:splashBar 1.4s ease-in-out infinite;}
+        @keyframes splashBar{0%{transform:translateX(-100%);}100%{transform:translateX(250%);}}
+    </style>
+</head>
+<body class="h-[100dvh] w-full bg-transparent text-white font-sans overflow-hidden flex flex-col">
+    <div class="app-bg"><span></span><span></span><span></span></div>
+
+    <div id="splash-screen">
+        <div class="splash-rings"><span></span><span></span><span></span><span></span>
+            <div class="splash-disc"></div>
+            <div class="splash-logo-wrap shine-sweep"><img src="/xymusic.vercel.app/logo.png" alt="logo" onerror="this.style.display='none'" style="display: none;"></div>
+        </div>
+        <div class="splash-title chrome-text">Musically</div>
+        <div class="splash-sub">Studio Musik Digital & Pemutar Audio</div>
+        <div class="splash-bar"><i></i></div>
+    </div>
+
+    <div class="flex-1 w-full max-w-3xl lg:max-w-4xl mx-auto overflow-y-auto pb-28 hide-scrollbar" id="main-area">
+        <div id="view-home"></div>
+        <div id="view-search" style="display:none;"></div>
+        <div id="view-library" style="display:none;"></div>
+    </div>
+
+    <div id="nav-container"></div>
+    <div id="mini-container"></div>
+    <div id="full-container"></div>
+    <div id="lyrics-container"></div>
+    <div id="artist-container"></div>
+    <div id="favorites-container"></div>
+    <div id="yt-player-container" class="fixed -left-[9999px] top-0 w-[320px] h-[180px] pointer-events-none opacity-100 overflow-hidden">
+        <div id="yt-player"></div>
+    </div>
+    <audio id="bg-audio" loop preload="auto" style="display:none;" src="https://raw.githubusercontent.com/anars/blank-audio/master/1-second-of-silence.mp3"></audio>
+
+    <script src="/xymusic.vercel.app/player.js"></script>
+    <script src="/xymusic.vercel.app/home.js"></script>
+    <script src="/xymusic.vercel.app/search.js"></script>
+    <script src="/xymusic.vercel.app/miniplayer.js"></script>
+    <script src="/xymusic.vercel.app/fullplayer.js"></script>
+    <script src="/xymusic.vercel.app/artist.js"></script>
+    <script src="/xymusic.vercel.app/favorites.js"></script>
+    <script src="/xymusic.vercel.app/app.js"></script>
+
+    <!-- PWA Service Worker & Advanced Installation Handler -->
+    <script>
+      let deferredPrompt = null;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        const installBtn = document.getElementById('pwa-install-banner');
+        if (installBtn) installBtn.classList.remove('hidden');
+      });
+
+      function installPWA() {
+        if (!deferredPrompt) {
+          showToast('Aplikasi PWA sudah terpasang atau tidak didukung di browser ini');
+          return;
+        }
+        deferredPrompt.prompt();
+        deferredPrompt.userChoice.then((choiceResult) => {
+          if (choiceResult.outcome === 'accepted') {
+            showToast('Musically PWA Berhasil Dipasang!');
+          }
+          deferredPrompt = null;
+          const banner = document.getElementById('pwa-install-banner');
+          if (banner) banner.classList.add('hidden');
+        });
+      }
+
+      window.addEventListener('appinstalled', () => {
+        showToast('Musically PWA Siap Digunakan dalam Mode Aplikasi!');
+        const banner = document.getElementById('pwa-install-banner');
+        if (banner) banner.classList.add('hidden');
+      });
+
+      // Network Status Listeners
+      window.addEventListener('online', () => {
+        showToast('Koneksi Internet Terhubung Kembali');
+      });
+      window.addEventListener('offline', () => {
+        showToast('Mode Offline PWA Aktif - Musik Tersimpan Tetap Bisa Diputar');
+      });
+
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js').then((reg) => {
+            console.log('SW Registered:', reg.scope);
+            reg.onupdatefound = () => {
+              const installingWorker = reg.installing;
+              installingWorker.onstatechange = () => {
+                if (installingWorker.state === 'installed' && navigator.serviceWorker.controller) {
+                  showToast('Versi Baru Musically PWA Tersedia! Muat ulang halaman.');
+                }
+              };
+            };
+          }).catch((err) => console.log('SW Fail:', err));
+        });
+      }
+    </script>
+
+</body></html>
